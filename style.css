@@ -1,0 +1,516 @@
+:root {
+    --primary-red: #c41e3a;
+    --primary-gold: #d4af37;
+    --primary-purple: #722f37;
+    --dark-bg: #1a0e0e;
+    --light-gold: #f4e4c1;
+    --text-white: #fef9f0;
+    --shadow-dark: rgba(0, 0, 0, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans TC', 'Noto Serif TC', sans-serif;
+    background: linear-gradient(135deg, #1a0e0e 0%, #2d1414 50%, #1a0e0e 100%);
+    color: var(--text-white);
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+/* 畫面切換 */
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 宮殿裝飾 */
+.palace-ornament {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--primary-gold) 0%, transparent 70%);
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.palace-ornament.top-left { top: -50px; left: -50px; }
+.palace-ornament.top-right { top: -50px; right: -50px; }
+.palace-ornament.bottom-left { bottom: -50px; left: -50px; }
+.palace-ornament.bottom-right { bottom: -50px; right: -50px; }
+
+/* 主選單 */
+.title-container {
+    text-align: center;
+    margin-bottom: 3rem;
+    z-index: 10;
+}
+
+.game-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-gold) 0%, #fff 50%, var(--primary-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    margin-bottom: 1rem;
+    letter-spacing: 0.3rem;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+    50% { filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.8)); }
+}
+
+.game-subtitle {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.1rem;
+    color: var(--light-gold);
+    line-height: 1.8;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    z-index: 10;
+}
+
+.menu-btn {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-purple) 100%);
+    border: 2px solid var(--primary-gold);
+    color: var(--text-white);
+    padding: 1rem 3rem;
+    font-size: 1.3rem;
+    font-family: 'Noto Serif TC', serif;
+    cursor: pointer;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px var(--shadow-dark);
+    min-width: 300px;
+    justify-content: center;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    border-color: #fff;
+    background: linear-gradient(135deg, #d4396f 0%, #8b3a4a 100%);
+}
+
+.menu-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    font-size: 1.5rem;
+}
+
+/* 漂浮花瓣 */
+.floating-petals {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.floating-petals::before,
+.floating-petals::after {
+    content: '🌸';
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: float 15s infinite ease-in-out;
+}
+
+.floating-petals::before {
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.floating-petals::after {
+    top: 60%;
+    right: 15%;
+    animation-delay: 7s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-50px) rotate(180deg); }
+}
+
+/* 遊戲畫面 */
+#game-screen {
+    background: linear-gradient(to bottom, 
+        rgba(26, 14, 14, 0.95) 0%, 
+        rgba(45, 20, 20, 0.95) 50%, 
+        rgba(26, 14, 14, 0.95) 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23722f37" opacity="0.05" width="100" height="100"/></svg>');
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+/* 屬性面板 */
+.stats-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, rgba(114, 47, 55, 0.9) 0%, rgba(196, 30, 58, 0.8) 100%);
+    border: 2px solid var(--primary-gold);
+    border-radius: 15px;
+    padding: 1.5rem;
+    min-width: 250px;
+    box-shadow: 0 5px 25px var(--shadow-dark);
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.stat-item:last-child {
+    margin-bottom: 0;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: var(--light-gold);
+    font-family: 'Noto Serif TC', serif;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.stat-bar {
+    position: relative;
+    width: 120px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--primary-gold);
+}
+
+.stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-gold) 0%, #fff 100%);
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+.stat-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 3px #000;
+}
+
+/* 章節指示器 */
+.chapter-indicator {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary-gold) 0%, #fff 50%, var(--primary-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.5rem 2rem;
+    border: 2px solid var(--primary-gold);
+    border-radius: 30px;
+    background-color: rgba(26, 14, 14, 0.8);
+    box-shadow: 0 5px 20px var(--shadow-dark);
+}
+
+/* 對話框 */
+.dialogue-container {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 900px;
+    background: linear-gradient(135deg, rgba(26, 14, 14, 0.95) 0%, rgba(45, 20, 20, 0.95) 100%);
+    border: 3px solid var(--primary-gold);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px var(--shadow-dark);
+    backdrop-filter: blur(15px);
+}
+
+.speaker-name {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dialogue-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-white);
+    text-align: justify;
+    min-height: 60px;
+}
+
+.narration-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--light-gold);
+    font-style: italic;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* 選擇按鈕 */
+.choices-container {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.choice-btn {
+    background: linear-gradient(135deg, rgba(114, 47, 55, 0.9) 0%, rgba(196, 30, 58, 0.85) 100%);
+    border: 2px solid var(--primary-gold);
+    color: var(--text-white);
+    padding: 1.2rem 2rem;
+    font-size: 1.1rem;
+    font-family: 'Noto Serif TC', serif;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    text-align: left;
+    box-shadow: 0 5px 15px var(--shadow-dark);
+}
+
+.choice-btn:hover {
+    transform: translateX(10px);
+    background: linear-gradient(135deg, rgba(196, 30, 58, 0.95) 0%, rgba(212, 62, 111, 0.9) 100%);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    border-color: #fff;
+}
+
+/* 繼續按鈕 */
+.continue-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, var(--primary-gold) 0%, #fff 100%);
+    color: var(--dark-bg);
+    border: none;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.continue-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.7);
+}
+
+/* 遊戲菜單 */
+.menu-toggle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(114, 47, 55, 0.9);
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background: var(--primary-red);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.game-menu {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    background: linear-gradient(135deg, rgba(26, 14, 14, 0.98) 0%, rgba(45, 20, 20, 0.98) 100%);
+    border: 2px solid var(--primary-gold);
+    border-radius: 15px;
+    padding: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.8rem;
+    box-shadow: 0 10px 40px var(--shadow-dark);
+}
+
+.game-menu.active {
+    display: flex;
+}
+
+.game-menu-btn {
+    background: rgba(114, 47, 55, 0.8);
+    border: 1px solid var(--primary-gold);
+    color: var(--text-white);
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.game-menu-btn:hover {
+    background: var(--primary-red);
+    transform: translateX(5px);
+}
+
+/* 結局畫面 */
+.ending-container, .credits-container {
+    text-align: center;
+    max-width: 800px;
+    background: linear-gradient(135deg, rgba(26, 14, 14, 0.95) 0%, rgba(45, 20, 20, 0.95) 100%);
+    border: 3px solid var(--primary-gold);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 50px var(--shadow-dark);
+}
+
+.ending-title, .credits-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-gold) 0%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2rem;
+}
+
+.ending-content, .credits-content {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: var(--light-gold);
+    text-align: left;
+}
+
+.credits-content h3 {
+    color: var(--primary-gold);
+    font-family: 'Noto Serif TC', serif;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.credits-content ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.credits-content li {
+    padding: 0.3rem 0;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
+    
+    .game-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .stats-panel {
+        min-width: 200px;
+        padding: 1rem;
+    }
+    
+    .dialogue-container {
+        padding: 1.5rem;
+    }
+    
+    .dialogue-text {
+        font-size: 1rem;
+    }
+    
+    .choice-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* 隱藏禁用的按鈕 */
+.menu-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none !important;
+}
