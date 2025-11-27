@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- 主選單畫面 -->
     <div id="main-menu" class="screen active">
@@ -16,12 +20,12 @@
         <div class="palace-ornament top-right"></div>
         <div class="palace-ornament bottom-left"></div>
         <div class="palace-ornament bottom-right"></div>
-        
+
         <div class="title-container">
             <h1 class="game-title">後宮·臭寶傳</h1>
             <p class="game-subtitle">在這險惡的後宮中，我吳芃秀求的不是榮華富貴<br>而是那個叫臭咘咘的男人心裡的唯一位置。</p>
         </div>
-        
+
         <div class="menu-buttons">
             <button class="menu-btn" onclick="startNewGame()">
                 <span class="btn-icon">🌸</span>
@@ -36,7 +40,7 @@
                 <span class="btn-text">關於遊戲</span>
             </button>
         </div>
-        
+
         <div class="floating-petals"></div>
     </div>
 
@@ -91,7 +95,7 @@
 
         <!-- 遊戲菜單按鈕 -->
         <button class="menu-toggle" onclick="toggleGameMenu()">☰</button>
-        
+
         <!-- 遊戲內菜單 -->
         <div class="game-menu" id="game-menu">
             <button class="game-menu-btn" onclick="saveGame()">💾 存檔</button>
@@ -120,10 +124,10 @@
             <div class="credits-content">
                 <h3>遊戲類型</h3>
                 <p>角色扮演 / 文字冒險 / 戀愛模擬</p>
-                
+
                 <h3>遊戲時長</h3>
                 <p>約 1 小時</p>
-                
+
                 <h3>遊戲特色</h3>
                 <ul>
                     <li>🌸 中國宮廷風格視覺設計</li>
@@ -132,7 +136,7 @@
                     <li>✨ 3種不同結局等你探索</li>
                     <li>💝 幽默溫馨的對話體驗</li>
                 </ul>
-                
+
                 <h3>操作說明</h3>
                 <p>點擊「繼續」推進劇情，在關鍵時刻做出選擇，影響寵愛值和故事走向。</p>
             </div>
@@ -142,7 +146,166 @@
             </button>
         </div>
     </div>
+    <!DOCTYPE html>
+    <html lang="zh-TW">
 
-    <script src="game.js"></script>
-</body>
-</html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>後宮·臭寶傳 - 宮廷戀愛冒險遊戲</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+            rel="stylesheet">
+    </head>
+
+    <body>
+        <!-- 主選單畫面 -->
+        <div id="main-menu" class="screen active">
+            <div class="palace-ornament top-left"></div>
+            <div class="palace-ornament top-right"></div>
+            <div class="palace-ornament bottom-left"></div>
+            <div class="palace-ornament bottom-right"></div>
+
+            <div class="title-container">
+                <h1 class="game-title">後宮·臭寶傳</h1>
+                <p class="game-subtitle">在這險惡的後宮中，我吳芃秀求的不是榮華富貴<br>而是那個叫臭咘咘的男人心裡的唯一位置。</p>
+            </div>
+
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="startNewGame()">
+                    <span class="btn-icon">🌸</span>
+                    <span class="btn-text">開始遊戲</span>
+                </button>
+                <button class="menu-btn" onclick="continueGame()" id="continue-btn">
+                    <span class="btn-icon">📜</span>
+                    <span class="btn-text">繼續遊戲</span>
+                </button>
+                <button class="menu-btn" onclick="showCredits()">
+                    <span class="btn-icon">👑</span>
+                    <span class="btn-text">關於遊戲</span>
+                </button>
+            </div>
+
+            <div class="floating-petals"></div>
+        </div>
+
+        <!-- 遊戲畫面 -->
+        <div id="game-screen" class="screen">
+            <!-- 屬性顯示區 -->
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">封號</span>
+                    <span class="stat-value" id="title">秀常在</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">寵愛值</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill" id="love-bar" style="width: 0%"></div>
+                        <span class="stat-number" id="love-value">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">美貌</span>
+                    <span class="stat-value" id="beauty">90</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">智慧</span>
+                    <span class="stat-value" id="intelligence">85</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">體力</span>
+                    <span class="stat-value" id="stamina">50</span>
+                </div>
+            </div>
+
+            <!-- 章節顯示 -->
+            <div class="chapter-indicator" id="chapter-indicator">
+                序章：選秀風雲
+            </div>
+
+            <!-- 對話框區域 -->
+            <div class="dialogue-container">
+                <div class="speaker-name" id="speaker-name"></div>
+                <div class="dialogue-text" id="dialogue-text"></div>
+                <div class="narration-text" id="narration-text"></div>
+            </div>
+
+            <!-- 選擇按鈕區域 -->
+            <div class="choices-container" id="choices-container"></div>
+
+            <!-- 繼續按鈕 -->
+            <button class="continue-btn" id="continue-btn-game" onclick="nextDialogue()">
+                繼續 ▶
+            </button>
+
+            <!-- 遊戲菜單按鈕 -->
+            <button class="menu-toggle" onclick="toggleGameMenu()">☰</button>
+
+            <!-- 遊戲內菜單 -->
+            <div class="game-menu" id="game-menu">
+                <button class="game-menu-btn" onclick="saveGame()">💾 存檔</button>
+                <button class="game-menu-btn" onclick="loadGame()">📂 讀檔</button>
+                <button class="game-menu-btn" onclick="backToMainMenu()">🏠 主選單</button>
+            </div>
+        </div>
+
+        <!-- 結局畫面 -->
+        <div id="ending-screen" class="screen">
+            <div class="ending-container">
+                <h2 class="ending-title" id="ending-title"></h2>
+                <div class="ending-content" id="ending-content"></div>
+                <div class="ending-image" id="ending-image"></div>
+                <button class="menu-btn" onclick="backToMainMenu()" style="margin-top: 2rem;">
+                    <span class="btn-icon">🏠</span>
+                    <span class="btn-text">返回主選單</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 關於畫面 -->
+        <div id="credits-screen" class="screen">
+            <div class="credits-container">
+                <h2 class="credits-title">關於遊戲</h2>
+                <div class="credits-content">
+                    <h3>遊戲類型</h3>
+                    <p>角色扮演 / 文字冒險 / 戀愛模擬</p>
+
+                    <h3>遊戲時長</h3>
+                    <p>約 1 小時</p>
+
+                    <h3>遊戲特色</h3>
+                    <ul>
+                        <li>🌸 中國宮廷風格視覺設計</li>
+                        <li>💕 多重選擇影響劇情走向</li>
+                        <li>👑 5個精彩章節完整故事</li>
+                        <li>✨ 3種不同結局等你探索</li>
+                        <li>💝 幽默溫馨的對話體驗</li>
+                    </ul>
+
+                    <h3>操作說明</h3>
+                    <p>點擊「繼續」推進劇情，在關鍵時刻做出選擇，影響寵愛值和故事走向。</p>
+                </div>
+                <button class="menu-btn" onclick="hideCredits()" style="margin-top: 2rem;">
+                    <span class="btn-icon">↩️</span>
+                    <span class="btn-text">返回</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 載入章節數據文件 -->
+        <script src="chapters/chapter0.js"></script>
+        <script src="chapters/chapter1.js"></script>
+        <script src="chapters/chapter2.js"></script>
+        <script src="chapters/chapter3.js"></script>
+        <script src="chapters/chapter4.js"></script>
+        <script src="chapters/chapter5.js"></script>
+        <script src="chapters/endings.js"></script>
+
+        <!-- 載入遊戲主邏輯 -->
+        <script src="game.js"></script>
+    </body>
+
+    </html>
