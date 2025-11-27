@@ -22,9 +22,49 @@ const gameData = {
         chapter2,  // 第二章：後宮風波 - 綠茶的陷阱
         chapter3,  // 第三章：冷宮（？）與真心
         chapter4,  // 第四章：封后大典前夕
-        chapter5   // 第五章：碎玉軒風聲 - 小常在也要上班
+        chapter5,  // 第五章：碎玉軒風聲 - 小常在也要上班
+        chapter6   // 第六章：藥湯與小灶 - 後宮不只有甜的
     ],
     endings: endings  // 結局數據定義在 chapters/endings.js
+};
+
+// 章節稱號定義
+const chapterTitles = {
+    0: [
+        { condition: (stats) => stats.beauty >= 95, title: '艷冠群芳' },
+        { condition: (stats) => stats.intelligence >= 90, title: '蘭心蕙質' },
+        { condition: () => true, title: '璞玉渾金' }
+    ],
+    1: [
+        { condition: (stats) => stats.lovePoints >= 20, title: '椒房獨寵' },
+        { condition: (stats) => stats.intelligence >= 95, title: '步步為營' },
+        { condition: () => true, title: '安分守己' }
+    ],
+    2: [
+        { condition: (stats) => stats.intelligence >= 100, title: '鑑茶達人' },
+        { condition: (stats) => stats.lovePoints >= 40, title: '聖心眷顧' },
+        { condition: () => true, title: '蒙混過關' }
+    ],
+    3: [
+        { condition: (stats) => stats.stamina >= 60, title: '打不死的小強' },
+        { condition: (stats) => stats.lovePoints >= 60, title: '念念不忘' },
+        { condition: () => true, title: '韜光養晦' }
+    ],
+    4: [
+        { condition: (stats) => stats.lovePoints >= 80, title: '準皇后' },
+        { condition: (stats) => stats.intelligence >= 110, title: '女諸葛' },
+        { condition: () => true, title: '傾國傾城' }
+    ],
+    5: [
+        { condition: (stats) => stats.intelligence >= 120, title: '職場女王' },
+        { condition: (stats) => stats.lovePoints >= 100, title: '甜心寶貝' },
+        { condition: () => true, title: '薪水小偷' }
+    ],
+    6: [
+        { condition: (stats) => stats.intelligence >= 130, title: '人間清醒' },
+        { condition: (stats) => stats.lovePoints >= 120, title: '與君同心' },
+        { condition: () => true, title: '苦中作樂' }
+    ]
 };
 
 // 初始化遊戲
@@ -399,6 +439,8 @@ function nextDialogue() {
         showScene();
     } else {
         // 章節結束
+        evaluateChapterTitle(gameState.currentChapter);
+
         if (gameState.currentChapter < gameData.chapters.length - 1) {
             gameState.currentChapter++;
             gameState.currentScene = 0;
@@ -406,7 +448,7 @@ function nextDialogue() {
             showScene();
         } else {
             // 遊戲結束，顯示默認結局或待續
-            if (gameState.currentChapter === 5) { // 第五章結束
+            if (gameState.currentChapter === 6) { // 第六章結束
                 showEnding('tbc');
             } else {
                 showEnding('true');
@@ -480,6 +522,27 @@ function makeChoice(choiceIndex) {
 
     // 每次做出選擇後自動存檔
     autoSave();
+}
+
+// 評估並頒發章節稱號
+function evaluateChapterTitle(chapterIndex) {
+    const titles = chapterTitles[chapterIndex];
+    if (!titles) return;
+
+    for (const def of titles) {
+        if (def.condition(gameState.stats)) {
+            // 只有當稱號改變時才通知（或者每次章節結束都通知）
+            // 這裡選擇每次都通知，作為章節結算的獎勵感
+            gameState.stats.title = def.title;
+            updateStats();
+
+            // 延遲一點顯示通知，讓玩家注意到
+            setTimeout(() => {
+                showNotification(`🎉 章節結算：獲得稱號【${def.title}】`);
+            }, 500);
+            break;
+        }
+    }
 }
 
 // 顯示結局
